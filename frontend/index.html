@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedDocs Assistant - AI-Powered Medical Document Analysis</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-stethoscope me-2"></i>
+                MedDocs Assistant
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#documents" data-tab="documents">
+                            <i class="fas fa-file-medical me-1"></i>Documents
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#chat" data-tab="chat">
+                            <i class="fas fa-comments me-1"></i>Chat
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reports" data-tab="reports">
+                            <i class="fas fa-file-alt me-1"></i>Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#google-drive" data-tab="google-drive">
+                            <i class="fab fa-google-drive me-1"></i>Google Drive
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Status Bar -->
+        <div id="status-bar" class="alert alert-info d-none" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            <span id="status-message">Ready</span>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents-tab" class="tab-content active">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                Upload Documents
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="upload-area">
+                                <div class="upload-content">
+                                    <i class="fas fa-file-upload fa-3x text-muted mb-3"></i>
+                                    <h6>Drag & Drop Files Here</h6>
+                                    <p class="text-muted">or click to browse</p>
+                                    <input type="file" id="file-input" multiple accept=".pdf,.docx,.doc,.xlsx,.xls,.png,.jpg,.jpeg,.tiff,.bmp" hidden>
+                                    <button class="btn btn-outline-primary" onclick="document.getElementById('file-input').click()">
+                                        Choose Files
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    Supported formats: PDF, Word, Excel, Images (PNG, JPG, TIFF, BMP)
+                                </small>
+                            </div>
+                            <div id="upload-progress" class="mt-3 d-none">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted mt-1 d-block">Uploading and processing...</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list me-2"></i>
+                                Document Library
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="documents-list" class="documents-list">
+                                <div class="text-center text-muted">
+                                    <i class="fas fa-folder-open fa-2x mb-2"></i>
+                                    <p>No documents uploaded yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Tab -->
+        <div id="chat-tab" class="tab-content">
+            <div class="row h-100">
+                <div class="col-12">
+                    <div class="card chat-card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-robot me-2"></i>
+                                Medical Document Assistant
+                            </h5>
+                            <small>Ask questions about your uploaded documents</small>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="chat-messages" class="chat-messages">
+                                <div class="message assistant-message">
+                                    <div class="message-content">
+                                        <i class="fas fa-robot me-2"></i>
+                                        Hello! I'm your medical document assistant. I can help you analyze your uploaded documents and answer questions based on their content. What would you like to know?
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="input-group">
+                                <input type="text" id="chat-input" class="form-control" placeholder="Ask a question about your documents..." maxlength="1000">
+                                <button class="btn btn-primary" id="send-button" type="button">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Answers are based only on your uploaded documents
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports-tab" class="tab-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="fas fa-file-medical-alt me-2"></i>
+                                Generate Report
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="report-form">
+                                <div class="mb-3">
+                                    <label for="report-title" class="form-label">Report Title</label>
+                                    <input type="text" class="form-control" id="report-title" placeholder="Medical Analysis Report" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Report Sections</label>
+                                    <div class="section-checkboxes">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="introduction" id="section-intro" checked>
+                                            <label class="form-check-label" for="section-intro">Introduction</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="clinical_findings" id="section-findings" checked>
+                                            <label class="form-check-label" for="section-findings">Clinical Findings</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="patient_data" id="section-patient">
+                                            <label class="form-check-label" for="section-patient">Patient Data</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="diagnosis" id="section-diagnosis">
+                                            <label class="form-check-label" for="section-diagnosis">Diagnosis</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="treatment" id="section-treatment">
+                                            <label class="form-check-label" for="section-treatment">Treatment</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="summary" id="section-summary" checked>
+                                            <label class="form-check-label" for="section-summary">Summary</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="document-filter" class="form-label">Filter Documents (Optional)</label>
+                                    <select multiple class="form-select" id="document-filter" size="4">
+                                        <option value="">All Documents</option>
+                                    </select>
+                                    <small class="text-muted">Hold Ctrl/Cmd to select multiple documents</small>
+                                </div>
+                                <button type="submit" class="btn btn-warning w-100">
+                                    <i class="fas fa-cog me-2"></i>
+                                    Generate Report
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-history me-2"></i>
+                                Generated Reports
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="reports-list" class="reports-list">
+                                <div class="text-center text-muted">
+                                    <i class="fas fa-file-alt fa-2x mb-2"></i>
+                                    <p>No reports generated yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Drive Tab -->
+        <div id="google-drive-tab" class="tab-content">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">
+                                <i class="fab fa-google-drive me-2"></i>
+                                Google Drive Integration
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <button class="btn btn-danger" id="load-drive-files">
+                                            <i class="fab fa-google-drive me-2"></i>
+                                            Load Google Drive Files
+                                        </button>
+                                        <button class="btn btn-outline-secondary ms-2" id="refresh-drive-files">
+                                            <i class="fas fa-sync-alt me-2"></i>
+                                            Refresh
+                                        </button>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="drive-search" placeholder="Search files...">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <strong>Note:</strong> Make sure your Google Drive credentials are properly configured in the backend.
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="google-drive-files" class="mt-3">
+                                <div class="text-center text-muted">
+                                    <i class="fab fa-google-drive fa-2x mb-2"></i>
+                                    <p>Click "Load Google Drive Files" to view available documents</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h6 id="loading-text">Processing...</h6>
+                    <p class="text-muted mb-0" id="loading-detail">Please wait while we process your request.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
